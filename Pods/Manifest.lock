@@ -1,0 +1,20 @@
+PODS:
+  - MBProgressHUD (1.2.0)
+  - SwiftLint (0.47.1)
+
+DEPENDENCIES:
+  - MBProgressHUD (~> 1.2.0)
+  - SwiftLint
+
+SPEC REPOS:
+  https://mirrors.tuna.tsinghua.edu.cn/git/CocoaPods/Specs.git:
+    - MBProgressHUD
+    - SwiftLint
+
+SPEC CHECKSUMS:
+  MBProgressHUD: 3ee5efcc380f6a79a7cc9b363dd669c5e1ae7406
+  SwiftLint: f80f1be7fa96d30e0aa68e58d45d4ea1ccaac519
+
+PODFILE CHECKSUM: f0dce95fab0e2942d4dceed29eeb878850668b92
+
+COCOAPODS: 1.11.3
