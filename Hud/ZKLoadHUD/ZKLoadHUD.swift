@@ -6,20 +6,20 @@
 //
 
 import UIKit
-/* HUD功能列表
- 1.简单的菊花 （100%）
- 2.菊花底部带文字（100%）
- 3.进度圆环、环形（100%）
- 4.进度带文字（100%）
- 5.带取消的进度圆环(底部取消按钮/右上角关闭按钮)此功能待定 （0%）
- 5.隐藏（90%）
- 6.自定义视图 （100%）
- 7.视图偏移量offsetY、offsetX （100%）
- 8.添加到自定义视图 （100%）
- 9.默认大小、背景色、圆角半径（100%）
- 10.动画效果
- 11.可以指定父视图 （100%）
- 12.默认添加至Window（100%）
+/* HUD功能列表:
+     1.简单的菊花 （100%）
+     2.菊花底部带文字（100%）
+     3.进度圆环、环形（100%）
+     4.进度带文字（100%）
+     5.带取消的进度圆环(底部取消按钮/右上角关闭按钮)此功能待定（0%） 直接hud.hide()
+     5.隐藏（100%）
+     6.自定义视图 （100%）
+     7.视图偏移量offsetY、offsetX （100%）
+     8.添加到自定义视图 （100%）
+     9.默认大小、背景色、圆角半径（100%）
+     10.动画显示/隐藏效果 （100%）
+     11.可以指定父视图 （100%）
+     12.默认添加至Window（100%）
  */
 
 /// ZKLoadHUD的类型
@@ -33,7 +33,7 @@ public enum ZKLoadHUDMode {
     
     /// 进度样式: 圆形进度
     /// 底部提示的文字
-    case progress(ZKLoadHUDRoundProgressView.ProgressLayerMode, String)
+    case progress(ZKLoadHUDRoundProgressView.ProgressLayerMode)
 }
 
 /// 动画类型
@@ -76,6 +76,7 @@ open class ZKLoadHUD: UIView {
     open var mode: ZKLoadHUDMode = .activity("")
     
     /// Y轴偏移量
+    /// 默认：0.0
     public var offsetY: CGFloat = 0.0 {
         didSet {
             guard self.offsetY != oldValue else { return }
@@ -84,6 +85,7 @@ open class ZKLoadHUD: UIView {
     }
     
     /// X轴偏移量
+    /// 默认：0.0
     public var offsetX: CGFloat = 0.0 {
         didSet {
             guard self.offsetX != oldValue else { return }
@@ -92,6 +94,7 @@ open class ZKLoadHUD: UIView {
     }
     
     ///  圆角半径
+    ///  默认： 5.0f
     public var backgroundViewCornerRadius: CGFloat = 5.0 {
         didSet {
             guard self.backgroundViewCornerRadius != oldValue else { return }
@@ -101,6 +104,7 @@ open class ZKLoadHUD: UIView {
     
     /// 内边距
     /// 调整backgroundView和其上子视图的距离
+    /// 默认： UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     public var padding: UIEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0) {
         didSet {
             guard self.padding != oldValue else { return }
@@ -110,8 +114,12 @@ open class ZKLoadHUD: UIView {
     
     /// 显示的时间，在...之后移除
     /// 在minShowTime之后自动移除
-    /// 默认一直显示
+    /// 默认: .never 一直显示
     public var minShowTime: DispatchTimeInterval = .never
+    
+    /// 当隐藏时是否从父视图中移除
+    /// 默认：Ture
+    public var removeFromSuperViewOnHide: Bool = true
     
     /// 设置提醒文字与顶部控件的距离
     /// 默认：10.0
@@ -192,7 +200,7 @@ open class ZKLoadHUD: UIView {
     private func setupViews() {
         self.isOpaque = false
         self.backgroundColor = .clear
-//        self.alpha = 0.0 // 默认隐藏
+        self.backgroundView.alpha = 0.0 // 默认隐藏
         self.autoresizingMask = [.flexibleHeight, .flexibleWidth]
     }
 }
@@ -200,19 +208,14 @@ open class ZKLoadHUD: UIView {
 // MARK: 公共方法
 extension ZKLoadHUD {
     
-    #warning("这个方法是临时调试设置")
-    open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-
-        self.removeFromSuperview()
-    }
-    
     /// 创建并显示一个HUD
     /// - Parameters:
     ///   - mode: 显示的类型 ZKLoadHUDMode
     ///   - superView: HUD显示的父视图  默认显示到Window
     @discardableResult
-    public class func showHUD(_ mode: ZKLoadHUDMode = .activity(""), _ superView: UIView? = ZKLoadHUD.getWindow()) -> ZKLoadHUD {
+    public class func showHUD(_ mode: ZKLoadHUDMode = .activity(""),
+                              superView: UIView? = ZKLoadHUD.getWindow()!,
+                              animation: ZKLoadHUDAnimation = .fade) -> ZKLoadHUD {
         
         assert(superView != nil, "⚠️⚠️⚠️ 父视图为空")
         
@@ -222,29 +225,33 @@ extension ZKLoadHUD {
         // 根据显示模式进行布局子视图
         hud.layoutByPattern()
     
-        hud.show()
+        hud.show(animation)
         return hud
     }
     
     /// 显示HUD
-    public func show() {
-        // TODO: 是否需要根据动画类型显示HUD
-        // 根据动画显示
-        UIView.animate(withDuration: 0.5) {
-            self.alpha = 1.0
-        } completion: { _ in
-            // 是否一直显示HUD
-            guard self.minShowTime != .never else { return }
-            DispatchQueue.main.asyncAfter(deadline: .now() + self.minShowTime) {
-                self.removeFromSuperview()
+    public func show(_ animation: ZKLoadHUDAnimation = .fade) {
+        DispatchQueue.main.async {
+            self.animateIn(true, animtaionType: animation) { [weak self] _ in
+                // 是否一直显示HUD
+                guard let self = self, self.minShowTime != .never else { return }
+                DispatchQueue.main.asyncAfter(deadline: .now() + self.minShowTime) {
+                    self.hide(animation)
+                }
             }
         }
     }
     
     /// 隐藏HUD
-    public func hide() {
-        // TODO: 是否需要动画
-        self.removeFromSuperview()
+    public func hide(_ animation: ZKLoadHUDAnimation = .fade) {
+        DispatchQueue.main.async {
+            self.animateIn(false, animtaionType: animation) { [weak self] _ in
+                guard let self = self else { return }
+                if self.removeFromSuperViewOnHide {
+                    self.removeFromSuperview()
+                }
+            }
+        }
     }
     
     /// 获取window
@@ -274,25 +281,40 @@ extension ZKLoadHUD {
     /// 根据模式进行布局子视图
     /// 会更据当前hud的设置进行新的布局
     public func layoutByPattern() {
-        switch self.mode {
-        case .activity(let tips):
-            self.setActivityModeHUD(tips)
-        case .customView(let view):
-            self.setCustomViewLayout(view)
-        case .progress(let progressMode, let tips):
-            self.roundProgressView.mode = progressMode
-            self.setProgressModeLayout(tips)
+        DispatchQueue.main.async {
+            switch self.mode {
+            case .activity(let tips):
+                self.setActivityModeHUD(tips)
+            case .customView(let view):
+                self.setCustomViewLayout(view)
+            case .progress(let progressMode):
+                self.roundProgressView.mode = progressMode
+                self.setProgressModeLayout("")
+            }
         }
     }
     
     /// 更新进度值
-    /// - Parameter progress: 进度
-    public func updateProgress(_ progress: Float) {
-        assert(progress >= 0.0, "⚠️⚠️⚠️进度值: \(progress)有误！")
+    /// - Parameter progress: 进度值 0.0  ~ 1.0
+    /// - Parameter des: 描述
+    public func updateProgress(_ progress: Float, des: String = "") {
+//        assert(progress >= 0.0 && progress < 1.0, "⚠️⚠️⚠️进度值: \(progress)有误！")
+        var progressTemp = progress
+        if progress < 0.0 {
+            progressTemp = 0.0
+        }
+        if progress > 1.0 {
+            progressTemp = 1.0
+        }
         switch self.mode {
         case .progress:
-            debugPrint("[Debug] progress = \(progress)")
-            self.roundProgressView.progress = progress
+            debugPrint("[Debug] progress = \(progressTemp)")
+            DispatchQueue.main.async {
+                if !des.isEmpty {
+                    self.setProgressModeLayout(des)
+                }
+                self.roundProgressView.progress = progressTemp
+            }
         default:
             debugPrint("[Debug] 非 progress 类型的HUD")
         }
@@ -326,6 +348,36 @@ extension ZKLoadHUD {
         if !self.activityIndicatorView.isAnimating {
             self.activityIndicatorView.startAnimating()
         }
+    }
+    
+    func animateIn(_ animatingIn: Bool, animtaionType: ZKLoadHUDAnimation, completion:@escaping (Bool)->()) {
+        var type = animtaionType
+        // 自动确定正确的缩放动画类型
+        if animtaionType == .zoom {
+            type = animatingIn ? .zoomIn : .zoomOut
+        }
+        
+        let small = CGAffineTransform(scaleX: 0.5, y: 0.5)
+        let large = CGAffineTransform(scaleX: 1.5, y: 1.5)
+        
+        // 设置起始状态
+        if animatingIn && self.backgroundView.alpha == 0.0 && type == .zoomIn {
+            self.backgroundView.transform = small
+        } else if (animatingIn && self.backgroundView.alpha == 0.0 && type == .zoomOut) {
+            self.backgroundView.transform = large
+        }
+        
+        // 动画
+        UIView.animate(withDuration: 0.3, delay: 0, usingSpringWithDamping: 1.0, initialSpringVelocity: 0.0, options: .beginFromCurrentState, animations: {
+            if animatingIn {
+                self.backgroundView.transform = CGAffineTransform.identity
+            } else if (!animatingIn && type == .zoomIn) {
+                self.backgroundView.transform = large
+            } else if (!animatingIn && type == .zoomOut) {
+                self.backgroundView.transform = small
+            }
+            self.backgroundView.alpha = animatingIn ? 1.0 : 0.0
+        }, completion: completion)
     }
 }
 

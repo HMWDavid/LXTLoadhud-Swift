@@ -21,25 +21,26 @@ class ViewController: UIViewController {
     
     @objc func timerEvent() {
         self.progressValue += 0.1
-        self.hud.updateProgress(self.progressValue)
+
+        self.hud.updateProgress(self.progressValue, des: "已下载：\n\(self.progressValue * 100.0) %")
         
-        if self.progressValue >= 1.1 {
+        if self.progressValue >= 1.0 {
             self.progressValue = 0.0
             self.hud.hide()
             self.timer?.invalidate()
+            self.timer = nil
         }
     }
     
     @IBAction func btnClick(_ sender: UIButton) {
-//        self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerEvent), userInfo: nil, repeats: true)
-        let customV = UIView()
-        customV.backgroundColor = .red
-        customV.frame = CGRect(x: 0, y: 0, width: 100, height: 100)
-        self.customViewHUD(customV)
+        if self.timer == nil {
+            self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerEvent), userInfo: nil, repeats: true)
+        }
+        self.progressHUD(self.view)
     }
     
     func progressHUD(_ sender: UIView) {
-        self.hud = ZKLoadHUD.showHUD(.progress(.round, ""), sender)
+        self.hud = ZKLoadHUD.showHUD(.progress(.round), superView: sender)
     }
     
     func activityHUD(_ sender: UIView) {
@@ -55,14 +56,10 @@ class ViewController: UIViewController {
     }
     
     func customViewHUD(_ sender: UIView) {
-        let hud = ZKLoadHUD.showHUD(.customView(sender))
-
+        let hud = ZKLoadHUD.showHUD(.customView(sender), animation: .zoomIn)
         hud.activityIndicatorView.color = .red
         hud.detaiLabel.textColor = .red
         hud.backgroundView.backgroundColor = .gray
         hud.backgroundColor = .black.withAlphaComponent(0.35)
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-            hud.hide()
-        }
     }
 }
