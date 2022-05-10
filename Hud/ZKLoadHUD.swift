@@ -49,15 +49,13 @@ public enum ZKLoadHUDAnimation {
 open class ZKLoadHUD: UIView {
     
     // MARK: 公共属性
-    /// ZKLoadHUD 类型 默认activity(nil)
+    /// ZKLoadHUD 模式类型 默认activity(“”)
     open var mode: ZKLoadHUDMode = .activity("")
     
     /// Y轴偏移量
     public var offsetY: CGFloat = 0.0 {
         didSet {
-            if self.offsetY == oldValue {
-                return
-            }
+            guard self.offsetY != oldValue else { return }
             self.backgroundView.center.y = self.center.y + self.offsetY
         }
     }
@@ -65,9 +63,7 @@ open class ZKLoadHUD: UIView {
     /// X轴偏移量
     public var offsetX: CGFloat = 0.0 {
         didSet {
-            if self.offsetX == oldValue {
-                return
-            }
+            guard self.offsetX != oldValue else { return }
             self.backgroundView.center.x = self.center.x + self.offsetX
         }
     }
@@ -75,18 +71,33 @@ open class ZKLoadHUD: UIView {
     ///  圆角半径
     public var backgroundViewCornerRadius: CGFloat = 5.0 {
         didSet {
+            guard self.backgroundViewCornerRadius != oldValue else { return }
             self.backgroundView.layer.cornerRadius = self.backgroundViewCornerRadius
         }
     }
     
     /// 内边距
     /// 调整backgroundView和其上子视图的距离
-    public var padding: UIEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
+    public var padding: UIEdgeInsets = UIEdgeInsets(top: 20.0, left: 10.0, bottom: 10.0, right: 10.0) {
+        didSet {
+            guard self.padding != oldValue else { return }
+            self.layoutByPattern()
+        }
+    }
     
     /// 显示的时间，在...之后移除
     /// 在minShowTime之后自动移除
     /// 默认一直显示
     public var minShowTime: DispatchTimeInterval = .never
+    
+    /// 设置提醒文字与顶部控件的距离
+    /// 默认：10.0
+    public var tipsLabTopMargin: CGFloat = 10.0 {
+        didSet {
+            guard self.tipsLabTopMargin != oldValue else { return }
+            self.layoutByPattern()
+        }
+    }
     
     /// 背景视图（盛放子控件）
     open lazy var backgroundView: ZKBackgroundView = {
@@ -151,7 +162,7 @@ open class ZKLoadHUD: UIView {
     #warning("这个方法是临时调试设置")
     open override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         super.touchesBegan(touches, with: event)
-            
+
         self.removeFromSuperview()
     }
     
@@ -166,13 +177,9 @@ open class ZKLoadHUD: UIView {
         
         let hud = self.createHUD(addedTo: superView ?? UIView())
         hud.mode = mode
-        switch mode {
-        case .activity(let tips):
-            hud.setActivityModeHUD(tips)
-        case .customView:
-            break
-        case .progress: break
-        }
+        
+        // 根据显示模式进行布局子视图
+        hud.layoutByPattern()
     
         hud.show()
         return hud
@@ -223,6 +230,19 @@ open class ZKLoadHUD: UIView {
         }
     }
     
+    /// 根据模式进行布局子视图
+    /// 会更据当前hud的设置进行新的布局
+    public func layoutByPattern() {
+        switch self.mode {
+        case .activity(let tips):
+            self.setActivityModeHUD(tips)
+        case .customView(let view):
+            print(view)
+        case .progress:
+            break
+        }
+    }
+    
     // MARK: 私有方法
     
     /// 创建一个HUD并添加到父视图上
@@ -235,15 +255,30 @@ open class ZKLoadHUD: UIView {
         return hud
     }
     
-    /// 配置Activity类型的hud
+    /// 配置Activity模式的hud
     /// - Parameter tips: 提醒的文字
     private func setActivityModeHUD(_ tips: String) {
+        
+        self.detaiLabel.text = tips
+        // 设置坐标
+        self.setActivityModeLayout(tips)
+        // 提示字符串为空的时候隐藏
+        self.detaiLabel.isHidden = tips.isEmpty
+        
+        // 直接开始转圈
+        if !self.activityIndicatorView.isAnimating {
+            self.activityIndicatorView.startAnimating()
+        }
+    }
+    
+    /// 设置Activity模式下的各个控件坐标
+    /// - Parameter tips: 提示语
+    private func setActivityModeLayout(_ tips: String) {
         /*
          1.计算文字大小 并 判断是否大于activityIndicatorView的宽 取最大的宽值
          2.加上margin的上下左右距离 得出 backgroundView的size
          3.在根据offsetY/offsetX确定 backgroundView的位置
          */
-        self.detaiLabel.text = tips
         
         // 父视图的宽 - 左右最小边距 - backgroundView的内边距 = tips文字能显示的最大宽度
         let maxWidth = (self.superview?.frame.width ?? self.screenWidth) -  self.padding.left - self.padding.right - self.minHorizontalMargin * 2.0
@@ -259,21 +294,19 @@ open class ZKLoadHUD: UIView {
             activityW = self.activityIndicatorView.style == .whiteLarge ? 37.0 : 20.0
         }
 
-        // backgroundView的宽度
+        // backgroundView的宽 = 文字宽或者activityW的宽 + 左右两边的内边距
         let backgroundViewWidth  = max(size.width, activityW) + self.padding.left + self.padding.right
-        let backgroundViewHeight = size.height + activityW + self.padding.top + self.padding.bottom
+        
+        // backgroundView的高 = 上内边距 + activityW(activity的高) + detaiLabel距离activity的大小 + 文字高度 + 底部内边距
+        let backgroundViewHeight = self.padding.top + activityW + self.tipsLabTopMargin + size.height + self.padding.bottom
         
         self.backgroundView.frame  = CGRect(x: 0, y: 0, width: backgroundViewWidth, height: backgroundViewHeight)
         self.backgroundView.center = CGPoint(x: self.center.x + self.offsetX, y: self.center.y + self.offsetY)
         
         self.activityIndicatorView.frame = CGRect(x: (backgroundViewWidth - activityW) / 2.0, y: self.padding.top, width: activityW, height: activityW)
         
-        self.detaiLabel.frame = CGRect(x: (backgroundViewWidth -  size.width) / 2.0, y: self.activityIndicatorView.frame.maxY, width: size.width, height: size.height)
-        self.detaiLabel.isHidden = tips.isEmpty
-        
-        if !self.activityIndicatorView.isAnimating {
-            self.activityIndicatorView.startAnimating()
-        }
+        // 提醒文字的frame
+        self.detaiLabel.frame = CGRect(x: (backgroundViewWidth -  size.width) / 2.0, y: self.activityIndicatorView.frame.maxY + self.tipsLabTopMargin, width: size.width, height: size.height)
     }
     
     /// 相关的初始化配置
@@ -286,7 +319,7 @@ open class ZKLoadHUD: UIView {
     
 }
 
-// MARK: 背景视图
+// MARK: ZKBackgroundView 背景视图
 open class ZKBackgroundView: UIView {
 
     override init(frame: CGRect) {
@@ -305,6 +338,7 @@ open class ZKBackgroundView: UIView {
     }
 }
 
+// MARK: 扩展
 extension String {
     
     /// 动态计算字体的Size
