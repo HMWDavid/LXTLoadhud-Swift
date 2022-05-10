@@ -51,4 +51,7 @@ identifier_name:
     - Id
 #    - URL
 #    - GlobalAPIKey
+function_body_length:
+  warning: 60
+  error: 100
 reporter: "xcode" # 报告类型 (xcode, json, csv, checkstyle, codeclimate, junit, html, emoji, sonarqube, markdown, github-actions-logging)
