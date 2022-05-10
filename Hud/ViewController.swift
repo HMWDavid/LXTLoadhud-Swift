@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     
     var dataSource =  [Model]()
     
-    var selectedModel:Model?
+    var selectedModel: Model?
     
     lazy var headerView: UIImageView = {
         let headerView = UIImageView()
