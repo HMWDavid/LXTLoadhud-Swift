@@ -17,37 +17,36 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="b6V-MH-wpd">
-                                <rect key="frame" x="88" y="285" width="239" height="131"/>
-                                <color key="backgroundColor" systemColor="systemBrownColor"/>
-                                <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
-                                <state key="normal" title="Button"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="mHM-5A-bpF">
+                                <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                 <connections>
-                                    <action selector="btnClick:" destination="BYZ-38-t0r" eventType="touchUpInside" id="50I-lN-Vn3"/>
+                                    <outlet property="dataSource" destination="BYZ-38-t0r" id="J0p-7t-X96"/>
+                                    <outlet property="delegate" destination="BYZ-38-t0r" id="aAL-Wo-PAp"/>
                                 </connections>
-                            </button>
+                            </tableView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="b6V-MH-wpd" secondAttribute="bottom" constant="446" id="5cc-Gg-9hd"/>
-                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="b6V-MH-wpd" secondAttribute="trailing" constant="87" id="Dz4-oa-ejv"/>
-                            <constraint firstItem="b6V-MH-wpd" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" constant="88" id="IVH-Ra-fIM"/>
-                            <constraint firstItem="b6V-MH-wpd" firstAttribute="top" secondItem="6Tk-OE-BBY" secondAttribute="top" constant="241" id="dHP-QT-aON"/>
+                            <constraint firstItem="mHM-5A-bpF" firstAttribute="trailing" secondItem="6Tk-OE-BBY" secondAttribute="trailing" id="V6R-UK-9OG"/>
+                            <constraint firstItem="mHM-5A-bpF" firstAttribute="top" secondItem="8bC-Xf-vdC" secondAttribute="top" id="ZOe-ce-gne"/>
+                            <constraint firstAttribute="bottom" secondItem="mHM-5A-bpF" secondAttribute="bottom" id="aH0-c3-Mho"/>
+                            <constraint firstItem="mHM-5A-bpF" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="quT-7x-Ity"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="tableView" destination="mHM-5A-bpF" id="3Rp-dB-6AE"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="131.8840579710145" y="102.45535714285714"/>
+            <point key="canvasLocation" x="-53.623188405797109" y="141.29464285714286"/>
         </scene>
     </scenes>
     <resources>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemBrownColor">
-            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

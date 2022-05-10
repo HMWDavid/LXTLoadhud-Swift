@@ -114,6 +114,7 @@ open class ZKLoadHUD: UIView {
     
     /// 显示的时间，在...之后移除
     /// 在minShowTime之后自动移除
+    /// 注: mode为progress模式时无效
     /// 默认: .never 一直显示
     public var minShowTime: DispatchTimeInterval = .never
     
@@ -214,12 +215,15 @@ extension ZKLoadHUD {
     ///   - superView: HUD显示的父视图  默认显示到Window
     @discardableResult
     public class func showHUD(_ mode: ZKLoadHUDMode = .activity(""),
-                              superView: UIView? = ZKLoadHUD.getWindow()!,
+                              superView: UIView? = ZKLoadHUD.getWindow(),
                               animation: ZKLoadHUDAnimation = .fade) -> ZKLoadHUD {
+        var tmpSuperV = superView
+        if superView == nil {// 避免传入的为nil
+            tmpSuperV = ZKLoadHUD.getWindow()
+        }
+        assert(tmpSuperV != nil, "⚠️⚠️⚠️ 父视图为空")
         
-        assert(superView != nil, "⚠️⚠️⚠️ 父视图为空")
-        
-        let hud = self.createHUD(addedTo: superView ?? UIView())
+        let hud = self.createHUD(addedTo: tmpSuperV ?? UIView())
         hud.mode = mode
         
         // 根据显示模式进行布局子视图
@@ -235,6 +239,15 @@ extension ZKLoadHUD {
             self.animateIn(true, animtaionType: animation) { [weak self] _ in
                 // 是否一直显示HUD
                 guard let self = self, self.minShowTime != .never else { return }
+                
+                switch self.mode {
+                case .progress:
+                    debugPrint("[Debug] 当前类型为进度的类型，设置 minShowTime 无效")
+                    return
+                default:
+                    break
+                }
+                
                 DispatchQueue.main.asyncAfter(deadline: .now() + self.minShowTime) {
                     self.hide(animation)
                 }
