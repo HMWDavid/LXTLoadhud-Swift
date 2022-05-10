@@ -49,6 +49,8 @@ identifier_name:
     - iD
     - ID
     - Id
+    - by
+    - By
 #    - URL
 #    - GlobalAPIKey
 function_body_length:

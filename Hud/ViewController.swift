@@ -78,14 +78,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let model = self.dataSource[indexPath.row]
         self.selectedModel = model
         self.hud = ZKLoadHUD.showHUD(model.hudType, superView: model.superView, animation: .fade)
-        self.hud.minShowTime = .seconds(3)
+//        self.hud.minShowTime = .seconds(3)
         switch self.hud.mode {
         case .progress:
             if self.timer == nil {
                 self.timer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(timerEvent), userInfo: nil, repeats: true)
             }
         default:
-            break
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                ZKLoadHUD.hide(for: self.headerView, .zoomOut)
+                ZKLoadHUD.hide(for: ZKLoadHUD.getWindow()!, .zoomOut)
+            }
         }
     }
 }

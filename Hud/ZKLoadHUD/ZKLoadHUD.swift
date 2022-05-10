@@ -267,6 +267,25 @@ extension ZKLoadHUD {
         }
     }
     
+    /// 从指定的View上
+    /// - Parameters:
+    ///   - View: 指定的View
+    ///   - animation: 动画效果
+    public class func hide(for view: UIView, _ animation: ZKLoadHUDAnimation = .fade) {
+        DispatchQueue.main.async {
+           
+            for item in view.subviews where item.isKind(of: ZKLoadHUD.self) {
+                let itemV = item as? ZKLoadHUD
+                itemV?.animateIn(false, animtaionType: animation) { _ in
+                    guard let selfItem = itemV else { return }
+                    if selfItem.removeFromSuperViewOnHide {
+                        selfItem.removeFromSuperview()
+                    }
+                }
+            }
+
+        }
+    }
     /// 获取window
     /// - Returns: window(可选)
     public class func getWindow() -> UIWindow? {
