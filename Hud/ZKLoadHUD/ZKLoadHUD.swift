@@ -79,40 +79,20 @@ open class ZKLoadHUD: UIView {
     
     /// Y轴偏移量
     /// 默认：0.0
-    public var offsetY: CGFloat = 0.0 {
-        didSet {
-            guard self.offsetY != oldValue else { return }
-            self.backgroundView.center.y = self.center.y + self.offsetY
-        }
-    }
+    public var offsetY: CGFloat = 0.0
     
     /// X轴偏移量
     /// 默认：0.0
-    public var offsetX: CGFloat = 0.0 {
-        didSet {
-            guard self.offsetX != oldValue else { return }
-            self.backgroundView.center.x = self.center.x + self.offsetX
-        }
-    }
+    public var offsetX: CGFloat = 0.0
     
     ///  圆角半径
     ///  默认： 5.0f
-    public var backgroundViewCornerRadius: CGFloat = 5.0 {
-        didSet {
-            guard self.backgroundViewCornerRadius != oldValue else { return }
-            self.backgroundView.layer.cornerRadius = self.backgroundViewCornerRadius
-        }
-    }
+    public var backgroundViewCornerRadius: CGFloat = 5.0
     
     /// 内边距
     /// 调整backgroundView和其上子视图的距离
     /// 默认： UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
-    public var padding: UIEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0) {
-        didSet {
-            guard self.padding != oldValue else { return }
-            self.layoutByPattern()
-        }
-    }
+    public var padding: UIEdgeInsets = UIEdgeInsets(top: 10.0, left: 10.0, bottom: 10.0, right: 10.0)
     
     /// 显示的时间，在...之后移除
     /// 在minShowTime之后自动移除
@@ -126,12 +106,7 @@ open class ZKLoadHUD: UIView {
     
     /// 设置提醒文字与顶部控件的距离
     /// 默认：10.0
-    public var tipsLabTopMargin: CGFloat = 10.0 {
-        didSet {
-            guard self.tipsLabTopMargin != oldValue else { return }
-            self.layoutByPattern()
-        }
-    }
+    public var tipsLabTopMargin: CGFloat = 10.0
     
     /// 背景视图（盛放子控件）
     open lazy var backgroundView: ZKLoadHUDBackgroundView = {
@@ -227,17 +202,15 @@ extension ZKLoadHUD {
         
         let hud = self.createHUD(addedTo: tmpSuperV ?? UIView())
         hud.mode = mode
-        
-        // 根据显示模式进行布局子视图
-        hud.layoutByPattern()
-    
-        hud.show(animation)
         return hud
     }
     
     /// 显示HUD
     public func show(_ animation: ZKLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
+            // 根据显示模式进行布局子视图
+            self.layoutByPattern()
+            
             self.animateIn(true, animtaionType: animation) { [weak self] _ in
                 // 是否一直显示HUD
                 guard let self = self, self.minShowTime != .never else { return }
@@ -288,6 +261,18 @@ extension ZKLoadHUD {
 
         }
     }
+    
+    /// 查找出指定是View视图上的所有HUD
+    /// - Parameter view: 对应的视图
+    /// - Returns: [ZKLoadHUD]
+    public class func findHUD(for view: UIView) -> [ZKLoadHUD] {
+        let huds =  view.subviews.filter({ item in
+            return item.isKind(of: ZKLoadHUD.self)
+        }) as? [ZKLoadHUD]
+        
+        return huds ?? [ZKLoadHUD]()
+    }
+    
     /// 获取window
     /// - Returns: window(可选)
     public class func getWindow() -> UIWindow? {
@@ -517,7 +502,7 @@ extension ZKLoadHUD {
         
         // 必须宽高有值
         if customView.bounds.size.width <= 0 || customView.bounds.size.height <= 0 {
-            print("请设置自定义视图\(customView)的size")
+            print("请正确的设置自定义视图\(customView)的size")
             return
         }
         

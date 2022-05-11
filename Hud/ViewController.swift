@@ -78,7 +78,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let model = self.dataSource[indexPath.row]
         self.selectedModel = model
         self.hud = ZKLoadHUD.showHUD(model.hudType, superView: model.superView, animation: .fade)
-//        self.hud.minShowTime = .seconds(3)
+        self.hud.show(.zoomIn)
         switch self.hud.mode {
         case .progress:
             if self.timer == nil {
