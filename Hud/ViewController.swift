@@ -7,8 +7,31 @@
 
 import UIKit
 
+enum ModelType: String {
+    /// activity 不带文字
+    case activity1      = "activity 不带文字"
+    /// activity 带文字
+    case activity2      = "activity 带文字"
+    /// activity 添加到指定View
+    case activity3      = "activity 添加到指定View"
+    /// customView 自定义视图
+    case customView1    = "customView 自定义视图"
+    /// customView 自定义视图 添加到指定View
+    case customView2    = "customView 自定义视图 添加到指定View"
+    /// progress 环形进度
+    case progress1      = "progress 环形进度"
+    /// progress 环形进度 带文字
+    case progress2      = "progress 环形进度 带文字"
+    /// progress 圆形进度
+    case progress3      = "progress 圆形进度"
+    /// progress 圆形进度 带文字
+    case progress4      = "progress 圆形进度 带文字"
+    /// progress 添加到指定View
+    case progress5      = "progress 添加到指定View"
+}
+
 struct Model {
-    var title: String
+    var type: ModelType
     var hudType: ZKLoadHUDMode
     var superView: UIView?
     var progressModeTipsTextEnabel: Bool = false
@@ -69,7 +92,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: NSStringFromClass(UITableViewCell.self), for: indexPath)
-        cell.textLabel?.text = self.dataSource[indexPath.row].title
+        cell.textLabel?.text = self.dataSource[indexPath.row].type.rawValue
         return cell
     }
     
@@ -77,8 +100,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = self.dataSource[indexPath.row]
         self.selectedModel = model
-        self.hud = ZKLoadHUD.showHUD(model.hudType, superView: model.superView, animation: .fade)
+        self.hud = ZKLoadHUD.hud(model.hudType, superView: model.superView)
         self.hud.show(.zoomIn)
+        
         switch self.hud.mode {
         case .progress:
             if self.timer == nil {
@@ -86,8 +110,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         default:
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                ZKLoadHUD.hide(for: self.headerView, .zoomOut)
-                ZKLoadHUD.hide(for: ZKLoadHUD.getWindow()!, .zoomOut)
+                ZKLoadHUD.hide(for: model.superView ?? ZKLoadHUD.getWindow()!, .zoomOut)
             }
         }
     }
@@ -103,16 +126,16 @@ extension ViewController {
         imgV.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
         customView.addSubview(imgV)
         
-        self.dataSource = [Model(title: "activity 不带文字", hudType: .activity("")),
-         Model(title: "activity 带文字", hudType: .activity("loadding...")),
-         Model(title: "activity 添加到指定View", hudType: .activity("loadding..."), superView: self.headerView),
-         Model(title: "customView 自定义视图", hudType: .customView(customView)),
-         Model(title: "customView 自定义视图 添加到指定View", hudType: .customView(customView), superView: self.headerView),
-         Model(title: "progress 环形进度", hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular)),
-         Model(title: "progress 环形进度 带文字", hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), progressModeTipsTextEnabel: true),
-         Model(title: "progress 圆形进度", hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round)),
-         Model(title: "progress 圆形进度 带文字", hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round), progressModeTipsTextEnabel: true),
-         Model(title: "progress 添加到指定View", hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), superView: self.headerView)
+        self.dataSource = [Model(type: .activity1, hudType: .activity("")),
+                           Model(type: .activity2, hudType: .activity("loadding...")),
+                           Model(type: .activity3, hudType: .activity("loadding..."), superView: self.headerView),
+                           Model(type: .customView1, hudType: .customView(customView)),
+                           Model(type: .customView2, hudType: .customView(customView), superView: self.headerView),
+                           Model(type: .progress1, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular)),
+                           Model(type: .progress2, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), progressModeTipsTextEnabel: true),
+                           Model(type: .progress3, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round)),
+                           Model(type: .progress4, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round), progressModeTipsTextEnabel: true),
+                           Model(type: .progress5, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), superView: self.headerView)
         ]
     }
 }

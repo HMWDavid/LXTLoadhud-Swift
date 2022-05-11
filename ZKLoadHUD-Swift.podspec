@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ZKLoadHUD-Swift'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'ZKLoadHUD-Swift 是一个纯swift版本的HUD'
 
 # This description is used to generate tags and improve search results.
@@ -19,20 +19,20 @@ Pod::Spec.new do |s|
 
   s.description      = <<-DESC
     HUD功能列表:
-        1.简单的菊花 （100%）
-        2.菊花底部带文字（100%）
-        3.进度圆环、环形（100%）
-        4.进度带文字（100%）
-        5.带取消的进度圆环(底部取消按钮/右上角关闭按钮)此功能待定（0%） 直接hud.hide()
-        5.隐藏（100%）
-        6.自定义视图 （100%）
-        7.视图偏移量offsetY、offsetX （100%）
-        8.添加到自定义视图 （100%）
-        9.默认大小、背景色、圆角半径（100%）
-        10.动画显示/隐藏效果 （100%）
-        11.可以指定父视图 （100%）
-        12.默认添加至Window（100%）
-        13.类方法从指定视图移除HUD（100%）
+      1.支持简单的菊花 
+      2.支持菊花底部带文字
+      3.支持Porgress类型圆环、环形
+      4.支持Porgress类型HUD带文字
+      5.支持手动隐藏
+      6.支持在...秒之后自动隐藏
+      7.支持调整视图偏移量offsetY、offsetX 来设置位置
+      8.支持添加到指定的视图UIView中
+      9.支持默认大小、背景色、圆角半径
+      10.支持动画显示/隐藏效果 动画类型有.fade .zoom .zoomIn .zoomOut
+      11.支持自定义视图
+      12.默认添加至Window
+      13.类方法从指定视图移除HUD
+      14.类方法在指定的视图中找出所有HUD
   DESC
 
   s.homepage         = 'http://172.29.151.11/ios/zkloadhud-swift'

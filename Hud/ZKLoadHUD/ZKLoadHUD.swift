@@ -186,14 +186,14 @@ open class ZKLoadHUD: UIView {
 // MARK: 公共方法
 extension ZKLoadHUD {
     
-    /// 创建并显示一个HUD
+    /// 创建一个HUD 实例
     /// - Parameters:
     ///   - mode: 显示的类型 ZKLoadHUDMode
     ///   - superView: HUD显示的父视图  默认显示到Window
+    /// - Returns: ZKLoadHUD 实例
     @discardableResult
-    public class func showHUD(_ mode: ZKLoadHUDMode = .activity(""),
-                              superView: UIView? = ZKLoadHUD.getWindow(),
-                              animation: ZKLoadHUDAnimation = .fade) -> ZKLoadHUD {
+    public class func hud(_ mode: ZKLoadHUDMode = .activity(""),
+                          superView: UIView? = ZKLoadHUD.getWindow()) -> ZKLoadHUD {
         var tmpSuperV = superView
         if superView == nil {// 避免传入的为nil
             tmpSuperV = ZKLoadHUD.getWindow()
@@ -206,6 +206,7 @@ extension ZKLoadHUD {
     }
     
     /// 显示HUD
+    /// 默认动画方式： .fade
     public func show(_ animation: ZKLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
             // 根据显示模式进行布局子视图
@@ -231,6 +232,7 @@ extension ZKLoadHUD {
     }
     
     /// 隐藏HUD
+    /// 默认动画方式： .fade
     public func hide(_ animation: ZKLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
             self.animateIn(false, animtaionType: animation) { [weak self] _ in
@@ -369,6 +371,11 @@ extension ZKLoadHUD {
         }
     }
     
+    /// 动画显示和隐藏
+    /// - Parameters:
+    ///   - animatingIn: 是否为进入
+    ///   - animtaionType: 动画类型
+    ///   - completion: 动画结束回调
     func animateIn(_ animatingIn: Bool, animtaionType: ZKLoadHUDAnimation, completion:@escaping (Bool)->()) {
         var type = animtaionType
         // 自动确定正确的缩放动画类型
