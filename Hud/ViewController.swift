@@ -102,7 +102,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         self.selectedModel = model
         self.hud = ZKLoadHUD.hud(model.hudType, superView: model.superView)
         self.hud.show(.zoomIn)
-        
+        // 允许用户交互
+        self.hud.isUserInteractionEnabled = false
         switch self.hud.mode {
         case .progress:
             if self.timer == nil {
@@ -126,11 +127,18 @@ extension ViewController {
         imgV.frame = CGRect(x: 5, y: 5, width: 40, height: 40)
         customView.addSubview(imgV)
         
+        let customView2 = UIView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        customView2.backgroundColor = .green
+        let imgV2 = UIImageView()
+        imgV2.image = UIImage(named: "portraitImage.jpg")
+        imgV2.frame = CGRect(x: 7.5, y: 7.5, width: 35, height: 35)
+        customView2.addSubview(imgV2)
+        
         self.dataSource = [Model(type: .activity1, hudType: .activity("")),
                            Model(type: .activity2, hudType: .activity("loadding...")),
                            Model(type: .activity3, hudType: .activity("loadding..."), superView: self.headerView),
                            Model(type: .customView1, hudType: .customView(customView)),
-                           Model(type: .customView2, hudType: .customView(customView), superView: self.headerView),
+                           Model(type: .customView2, hudType: .customView(customView2), superView: self.headerView),
                            Model(type: .progress1, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular)),
                            Model(type: .progress2, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), progressModeTipsTextEnabel: true),
                            Model(type: .progress3, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round)),
