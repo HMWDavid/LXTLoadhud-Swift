@@ -2,7 +2,7 @@
 //  ViewController.swift
 //  Hud
 //
-//  Created by zk_01 on 2022/5/9.
+//  Created by 洪绵卫 on 2022/5/9.
 //
 
 import UIKit
@@ -32,14 +32,14 @@ enum ModelType: String {
 
 struct Model {
     var type: ModelType
-    var hudType: ZKLoadHUDMode
+    var hudType: LXTLoadHUDMode
     var superView: UIView?
     var progressModeTipsTextEnabel: Bool = false
 }
 
 class ViewController: UIViewController {
 
-    var hud: ZKLoadHUD!
+    var hud: LXTLoadHUD!
     var timer: Timer?
 
     var progressValue: Float = 0.0
@@ -100,7 +100,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = self.dataSource[indexPath.row]
         self.selectedModel = model
-        self.hud = ZKLoadHUD.hud(model.hudType, superView: model.superView)
+        self.hud = LXTLoadHUD.hud(model.hudType, superView: model.superView)
         self.hud.show(.zoomIn)
         // 允许用户交互
         self.hud.isUserInteractionEnabled = false
@@ -111,7 +111,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
             }
         default:
             DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
-                ZKLoadHUD.hide(for: model.superView ?? ZKLoadHUD.getWindow()!, .zoomOut)
+                LXTLoadHUD.hide(for: model.superView ?? LXTLoadHUD.getWindow()!, .zoomOut)
             }
         }
     }
@@ -139,11 +139,11 @@ extension ViewController {
                            Model(type: .activity3, hudType: .activity("loadding..."), superView: self.headerView),
                            Model(type: .customView1, hudType: .customView(customView)),
                            Model(type: .customView2, hudType: .customView(customView2), superView: self.headerView),
-                           Model(type: .progress1, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular)),
-                           Model(type: .progress2, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), progressModeTipsTextEnabel: true),
-                           Model(type: .progress3, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round)),
-                           Model(type: .progress4, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.round), progressModeTipsTextEnabel: true),
-                           Model(type: .progress5, hudType: .progress(ZKLoadHUDRoundProgressView.ProgressLayerMode.annular), superView: self.headerView)
+                           Model(type: .progress1, hudType: .progress(LXTLoadHUDRoundProgressView.ProgressLayerMode.annular)),
+                           Model(type: .progress2, hudType: .progress(LXTLoadHUDRoundProgressView.ProgressLayerMode.annular), progressModeTipsTextEnabel: true),
+                           Model(type: .progress3, hudType: .progress(LXTLoadHUDRoundProgressView.ProgressLayerMode.round)),
+                           Model(type: .progress4, hudType: .progress(LXTLoadHUDRoundProgressView.ProgressLayerMode.round), progressModeTipsTextEnabel: true),
+                           Model(type: .progress5, hudType: .progress(LXTLoadHUDRoundProgressView.ProgressLayerMode.annular), superView: self.headerView)
         ]
     }
 }

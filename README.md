@@ -1,6 +1,6 @@
 
-## ZKLoadHUD-Swift 是纯Swift版本的HUD
- ##### ZKLoadHUD-Swift功能列表:
+## LXTLoadHUD-Swift 是纯Swift版本的HUD
+ ##### LXTLoadHUD-Swift功能列表:
      1.支持简单的菊花 
      2.支持菊花底部带文字
      3.支持Porgress类型圆环、环形
@@ -19,7 +19,7 @@
         // 提示的文本
         let tipsText = "loading..."
         // 创建并显示HUD,指定父视图为self.view（默认父视图：window）
-        let hud = ZKLoadHUD.hud(.activity(tipsText), superView: self.view)
+        let hud = LXTLoadHUD.hud(.activity(tipsText), superView: self.view)
         // 在2秒后自动隐藏
         hud.minShowTime = DispatchTimeInterval.seconds(2)
         // 指定显示的动画

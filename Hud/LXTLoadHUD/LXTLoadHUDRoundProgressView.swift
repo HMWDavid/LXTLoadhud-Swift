@@ -1,14 +1,14 @@
 //
-//  ZKLoadHUDRoundProgressView.swift
-//  ZKLoadHUD
+//  LXTLoadHUDRoundProgressView.swift
+//  LXTLoadHUD
 //
-//  Created by zk_01 on 2022/5/10.
+//  Created by 洪绵卫 on 2022/5/10.
 //
 
 import Foundation
 import UIKit
 
-open class ZKLoadHUDRoundProgressView: UIView {
+open class LXTLoadHUDRoundProgressView: UIView {
 
     /// 指示器的类型
     public enum ProgressLayerMode {

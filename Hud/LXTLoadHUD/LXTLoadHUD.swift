@@ -1,6 +1,6 @@
 //
-//  ZKLoadHUD.swift
-//  ZKLoadHUD
+//  LXTLoadHUD.swift
+//  LXTLoadHUD
 //
 //  Created by zk_01 on 2022/5/9.
 //
@@ -24,8 +24,8 @@ import UIKit
      13.类方法从指定视图移除HUD（100%）
  */
 
-/// ZKLoadHUD的类型
-public enum ZKLoadHUDMode {
+/// LXTLoadHUD的类型
+public enum LXTLoadHUDMode {
     
     /// 加载中的菊花样式(String为提示语，为空时不显示)
     case activity(String)
@@ -35,11 +35,11 @@ public enum ZKLoadHUDMode {
     
     /// 进度样式: 圆形进度
     /// 底部提示的文字
-    case progress(ZKLoadHUDRoundProgressView.ProgressLayerMode)
+    case progress(LXTLoadHUDRoundProgressView.ProgressLayerMode)
 }
 
 /// 动画类型
-public enum ZKLoadHUDAnimation {
+public enum LXTLoadHUDAnimation {
     case fade
     case zoom
     case zoomOut
@@ -55,7 +55,7 @@ fileprivate extension String {
     ///   - font: 字体样式
     ///   - size: 限定的大小
     /// - Returns: 字体大小
-    func zk_calculateTextSize(font: UIFont, size: CGSize) -> CGSize {
+    func lxt_calculateTextSize(font: UIFont, size: CGSize) -> CGSize {
         
         // 动态计算字体宽度
         let rect = self.boundingRect(with: size,
@@ -71,11 +71,11 @@ fileprivate extension String {
 /**
  * 可自定义的HUD
  */
-open class ZKLoadHUD: UIView {
+open class LXTLoadHUD: UIView {
     
     // MARK: 公共属性
-    /// ZKLoadHUD 模式类型 默认activity(“”)
-    open var mode: ZKLoadHUDMode = .activity("")
+    /// LXTLoadHUD 模式类型 默认activity(“”)
+    open var mode: LXTLoadHUDMode = .activity("")
     
     /// Y轴偏移量
     /// 默认：0.0
@@ -109,8 +109,8 @@ open class ZKLoadHUD: UIView {
     public var tipsLabTopMargin: CGFloat = 10.0
     
     /// 背景视图（盛放子控件）
-    open lazy var backgroundView: ZKLoadHUDBackgroundView = {
-        let backView = ZKLoadHUDBackgroundView()
+    open lazy var backgroundView: LXTLoadHUDBackgroundView = {
+        let backView = LXTLoadHUDBackgroundView()
         backView.layer.cornerRadius = self.backgroundViewCornerRadius
         backView.center = self.center
         self.addSubview(backView)
@@ -132,8 +132,8 @@ open class ZKLoadHUD: UIView {
     }()
     
     /// 进度环视图
-    lazy var roundProgressView: ZKLoadHUDRoundProgressView = {
-        let progressV = ZKLoadHUDRoundProgressView(frame: CGRect(x: 0, y: 0, width: 37.0, height: 37.0))
+    lazy var roundProgressView: LXTLoadHUDRoundProgressView = {
+        let progressV = LXTLoadHUDRoundProgressView(frame: CGRect(x: 0, y: 0, width: 37.0, height: 37.0))
         self.backgroundView.addSubview(progressV)
         return progressV
     }()
@@ -184,19 +184,19 @@ open class ZKLoadHUD: UIView {
 }
 
 // MARK: 公共方法
-extension ZKLoadHUD {
+extension LXTLoadHUD {
     
     /// 创建一个HUD 实例
     /// - Parameters:
-    ///   - mode: 显示的类型 ZKLoadHUDMode
+    ///   - mode: 显示的类型 LXTLoadHUDMode
     ///   - superView: HUD显示的父视图  默认显示到Window
-    /// - Returns: ZKLoadHUD 实例
+    /// - Returns: LXTLoadHUD 实例
     @discardableResult
-    public class func hud(_ mode: ZKLoadHUDMode = .activity(""),
-                          superView: UIView? = ZKLoadHUD.getWindow()) -> ZKLoadHUD {
+    public class func hud(_ mode: LXTLoadHUDMode = .activity(""),
+                          superView: UIView? = LXTLoadHUD.getWindow()) -> LXTLoadHUD {
         var tmpSuperV = superView
         if superView == nil {// 避免传入的为nil
-            tmpSuperV = ZKLoadHUD.getWindow()
+            tmpSuperV = LXTLoadHUD.getWindow()
         }
         assert(tmpSuperV != nil, "⚠️⚠️⚠️ 父视图为空")
         
@@ -207,7 +207,7 @@ extension ZKLoadHUD {
     
     /// 显示HUD
     /// 默认动画方式： .fade
-    public func show(_ animation: ZKLoadHUDAnimation = .fade) {
+    public func show(_ animation: LXTLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
             // 根据显示模式进行布局子视图
             self.layoutByPattern()
@@ -233,7 +233,7 @@ extension ZKLoadHUD {
     
     /// 隐藏HUD
     /// 默认动画方式： .fade
-    public func hide(_ animation: ZKLoadHUDAnimation = .fade) {
+    public func hide(_ animation: LXTLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
             self.animateIn(false, animtaionType: animation) { [weak self] _ in
                 guard let self = self else { return }
@@ -248,11 +248,11 @@ extension ZKLoadHUD {
     /// - Parameters:
     ///   - View: 指定的View
     ///   - animation: 动画效果
-    public class func hide(for view: UIView, _ animation: ZKLoadHUDAnimation = .fade) {
+    public class func hide(for view: UIView, _ animation: LXTLoadHUDAnimation = .fade) {
         DispatchQueue.main.async {
            
-            for item in view.subviews where item.isKind(of: ZKLoadHUD.self) {
-                let itemV = item as? ZKLoadHUD
+            for item in view.subviews where item.isKind(of: LXTLoadHUD.self) {
+                let itemV = item as? LXTLoadHUD
                 itemV?.animateIn(false, animtaionType: animation) { _ in
                     guard let selfItem = itemV else { return }
                     if selfItem.removeFromSuperViewOnHide {
@@ -266,13 +266,13 @@ extension ZKLoadHUD {
     
     /// 查找出指定是View视图上的所有HUD
     /// - Parameter view: 对应的视图
-    /// - Returns: [ZKLoadHUD]
-    public class func findHUD(for view: UIView) -> [ZKLoadHUD] {
+    /// - Returns: [LXTLoadHUD]
+    public class func findHUD(for view: UIView) -> [LXTLoadHUD] {
         let huds =  view.subviews.filter({ item in
-            return item.isKind(of: ZKLoadHUD.self)
-        }) as? [ZKLoadHUD]
+            return item.isKind(of: LXTLoadHUD.self)
+        }) as? [LXTLoadHUD]
         
-        return huds ?? [ZKLoadHUD]()
+        return huds ?? [LXTLoadHUD]()
     }
     
     /// 获取window
@@ -343,14 +343,14 @@ extension ZKLoadHUD {
 }
 
 // MARK: 私有方法
-extension ZKLoadHUD {
+extension LXTLoadHUD {
         
     /// 创建一个HUD并添加到父视图上
     /// - Parameter superView: 父视图
-    /// - Returns: ZKLoadHUD 实例
+    /// - Returns: LXTLoadHUD 实例
     @discardableResult
-    private class func createHUD(addedTo superView: UIView) -> ZKLoadHUD {
-        let hud = ZKLoadHUD(frame: superView.bounds)
+    private class func createHUD(addedTo superView: UIView) -> LXTLoadHUD {
+        let hud = LXTLoadHUD(frame: superView.bounds)
         superView.addSubview(hud)
         return hud
     }
@@ -376,7 +376,7 @@ extension ZKLoadHUD {
     ///   - animatingIn: 是否为进入
     ///   - animtaionType: 动画类型
     ///   - completion: 动画结束回调
-    func animateIn(_ animatingIn: Bool, animtaionType: ZKLoadHUDAnimation, completion:@escaping (Bool)->()) {
+    func animateIn(_ animatingIn: Bool, animtaionType: LXTLoadHUDAnimation, completion:@escaping (Bool)->()) {
         var type = animtaionType
         // 自动确定正确的缩放动画类型
         if animtaionType == .zoom {
@@ -408,7 +408,7 @@ extension ZKLoadHUD {
 }
 
 // MARK: 布局子视图
-extension ZKLoadHUD {
+extension LXTLoadHUD {
     // MARK: Activity 模式的布局
     /// 设置Activity模式下的各个控件坐标
     /// - Parameter tips: 提示语
@@ -430,7 +430,7 @@ extension ZKLoadHUD {
         }
         
         // 计算文字大小
-        let size = tips.zk_calculateTextSize(font: self.detaiLabel.font, size: CGSize(width: maxWidth, height: self.screenHeight))
+        let size = tips.lxt_calculateTextSize(font: self.detaiLabel.font, size: CGSize(width: maxWidth, height: self.screenHeight))
         
         // 文字为空时，取消detaiLabel与上面视图的间距
         let tempTipsLabTopMargin = tips.isEmpty ? 0.0 : self.tipsLabTopMargin
@@ -482,7 +482,7 @@ extension ZKLoadHUD {
         }
         
         // 计算文字大小
-        let size = tips.zk_calculateTextSize(font: self.detaiLabel.font, size: CGSize(width: maxWidth, height: self.screenHeight))
+        let size = tips.lxt_calculateTextSize(font: self.detaiLabel.font, size: CGSize(width: maxWidth, height: self.screenHeight))
         
         // backgroundView的宽 = 文字宽或者activityW的宽 + 左右两边的内边距
         let backgroundViewWidth  = max(self.roundProgressView.intrinsicContentSize.width, size.width) + self.padding.left + self.padding.right

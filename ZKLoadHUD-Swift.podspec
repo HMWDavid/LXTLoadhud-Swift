@@ -7,9 +7,9 @@
 #
 
 Pod::Spec.new do |s|
-  s.name             = 'ZKLoadHUD-Swift'
-  s.version          = '0.0.2'
-  s.summary          = 'ZKLoadHUD-Swift 是一个纯swift版本的HUD'
+  s.name             = 'LXTLoadHUD-Swift'
+  s.version          = '0.0.3'
+  s.summary          = 'LXTLoadHUD-Swift 是一个纯swift版本的HUD'
 
 # This description is used to generate tags and improve search results.
 #   * Think: What does it do? Why did you write it? What is the focus?
@@ -35,16 +35,16 @@ Pod::Spec.new do |s|
       14.类方法在指定的视图中找出所有HUD
   DESC
 
-  s.homepage         = 'http://172.29.151.11/ios/zkloadhud-swift'
+  s.homepage         = 'https://gitee.com/DaviesH/LXTLoadhud-Swift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '丧尸先生' => '244160918@qq.com' }
-  s.source           = { :git => 'http://172.29.151.11/ios/zkloadhud-swift', :tag => s.version.to_s }
+  s.source           = { :git => 'https://gitee.com/DaviesH/LXTLoadhud-Swift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '9.0'
 
-  s.source_files = 'Hud/ZKLoadHUD/**/*'
+  s.source_files = 'Hud/LXTLoadHUD/**/*'
   
   s.frameworks = 'UIKit', 'Foundation'
 end

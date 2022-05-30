@@ -1,15 +1,15 @@
 //
-//  ZKLoadHUDBackgroundView.swift
-//  ZKLoadHUD
+//  LXTLoadHUDBackgroundView.swift
+//  LXTLoadHUD
 //
-//  Created by zk_01 on 2022/5/10.
+//  Created by 洪绵卫 on 2022/5/10.
 //
 
 import Foundation
 import UIKit
 
-// MARK: ZKBackgroundView 背景视图
-open class ZKLoadHUDBackgroundView: UIView {
+// MARK: LXTBackgroundView 背景视图
+open class LXTLoadHUDBackgroundView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
