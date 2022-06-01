@@ -35,14 +35,15 @@ Pod::Spec.new do |s|
       14.类方法在指定的视图中找出所有HUD
   DESC
 
-  s.homepage         = 'https://gitee.com/DaviesH/LXTLoadhud-Swift'
+  s.homepage         = 'https://github.com/HMWDavid/LXTLoadhud-Swift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '丧尸先生' => '244160918@qq.com' }
-  s.source           = { :git => 'https://gitee.com/DaviesH/LXTLoadhud-Swift.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/HMWDavid/LXTLoadhud-Swift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
 
   s.ios.deployment_target = '9.0'
+  s.swift_version = '5.0'
 
   s.source_files = 'Hud/LXTLoadHUD/**/*'
   
