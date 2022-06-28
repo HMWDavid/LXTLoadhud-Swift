@@ -2,8 +2,8 @@
 [TOC]
 ##  LXTLoadHUD-Swift
     LXTLoadHUD-Swift 是纯Swift版本的HUD Swift 5.0 支持
-    码云仓库地址：https://gitee.com/DaviesH/LXTLoadhud-Swift
-    gitHub仓库地址：https://github.com/HMWDavid/LXTLoadhud-Swift
+    码云仓库地址：<https://gitee.com/DaviesH/LXTLoadhud-Swift>
+    gitHub仓库地址：<https://github.com/HMWDavid/LXTLoadhud-Swift>
 #### 推荐Cocoapods集成:
       pod 'LXTLoadHUD-Swift'
 
