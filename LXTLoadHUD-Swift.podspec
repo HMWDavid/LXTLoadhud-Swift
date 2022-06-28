@@ -37,7 +37,7 @@ Pod::Spec.new do |s|
 
   s.homepage         = 'https://github.com/HMWDavid/LXTLoadhud-Swift'
   # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
-  s.license          = 'MIT'
+  s.license          = { :type => 'MIT', :file => 'LICENSE' }
   s.author           = { '丧尸先生' => '244160918@qq.com' }
   s.source           = { :git => 'https://github.com/HMWDavid/LXTLoadhud-Swift.git', :tag => s.version.to_s }
   # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
