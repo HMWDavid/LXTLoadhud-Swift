@@ -1,5 +1,13 @@
 
-## LXTLoadHUD-Swift 是纯Swift版本的HUD
+## LXTLoadHUD-Swift 是纯Swift版本的HUD 
+    Swift 5.0 支持
+
+#### 推荐Cocoapods集成:
+      pod 'LXTLoadHUD-Swift'
+
+#### 源码集成：
+     下载项目源码，Hud文件夹下的LXTLoadHUD文件夹为存放源码的文件夹，拖进项目中即可使用。
+
  ##### LXTLoadHUD-Swift功能列表:
      1.支持简单的菊花 
      2.支持菊花底部带文字
@@ -15,6 +23,7 @@
      12.默认添加至Window
      13.类方法从指定视图移除HUD
      14.类方法在指定的视图中找出所有HUD
+     
  ##### 简单的使用方法：
         // 提示的文本
         let tipsText = "loading..."
