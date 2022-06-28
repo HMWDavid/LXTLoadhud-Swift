@@ -1,7 +1,9 @@
 
-## LXTLoadHUD-Swift 是纯Swift版本的HUD 
-    Swift 5.0 支持
-
+[TOC]
+##  LXTLoadHUD-Swift
+    LXTLoadHUD-Swift 是纯Swift版本的HUD Swift 5.0 支持
+    码云仓库地址：https://gitee.com/DaviesH/LXTLoadhud-Swift
+    gitHub仓库地址：https://github.com/HMWDavid/LXTLoadhud-Swift
 #### 推荐Cocoapods集成:
       pod 'LXTLoadHUD-Swift'
 
@@ -23,7 +25,7 @@
      12.默认添加至Window
      13.类方法从指定视图移除HUD
      14.类方法在指定的视图中找出所有HUD
-     
+
  ##### 简单的使用方法：
         // 提示的文本
         let tipsText = "loading..."
@@ -42,8 +44,6 @@
          *     // hud.hide(.zoomOut)
          * }****
          */
-##### 更多使用例子请下载后运行.xcworkspace
-##### 部分灵感来自MBProgressHUD Github仓库：https://github.com/jdg/MBProgressHUD
 
 ##### GIF 效果展示
 ![activity 不带文字](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu581h4vg209o0ledk5.gif)![activity 带文字](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu57u1hkg209o0leq89.gif)![activity 添加到指定View](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu57g0ybg209o0le79o.gif)
@@ -51,7 +51,8 @@
 ![progress 环形进度 带文字](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu55biphg209o0leqb1.gif)![progress 圆形进度](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu54zjfkg209o0leahp.gif)![progress 圆形进度 带文字](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu54s8r9g209o0lewn0.gif)
 ![progress 添加到指定View](https://tva1.sinaimg.cn/large/e6c9d24egy1h2tu54h6cqg209o0lednu.gif)
 
-
+##### 更多使用例子请下载后运行.xcworkspace
+##### 感谢MBProgressHUD的作者，部分灵感来自MBProgressHUD，Github仓库：https://github.com/jdg/MBProgressHUD
 
 
 
